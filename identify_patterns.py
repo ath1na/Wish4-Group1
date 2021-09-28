@@ -5,10 +5,11 @@ Implementation of what is presented in slide 62. Given a list of submeshes, we c
 - Try to input latent codes obtained from a NN
  """
 
-from stl import mesh
+import torch
 import os
 import trimesh
 import numpy as np
+
 
 def load_mesh(filepath):
     mesh = trimesh.load(filepath)
@@ -19,7 +20,7 @@ def load_parts(dir='sample_chair'):
     """Load each mesh part from the test chair directory"""
     meshes = []
     for i in range(1, 11):
-        mesh = load_mesh(os.path.join('..', dir, f'p{i}.stl'))
+        mesh = load_mesh(os.path.join(dir, f'p{i}.stl'))
         meshes.append(mesh)
     return meshes
 
@@ -82,7 +83,7 @@ def print_parts_correspondances(D_th):
 
 def get_primitives(D_th):
     prim_indices = [0]
-    from ipdb import set_trace; set_trace()
+    # from ipdb import set_trace; set_trace()
     for i in range(1, D_th.shape[0]):
         print(i, np.concatenate( np.where(D_th[:i,:])))
         if i not in np.concatenate( np.where(D_th[:i,:])):
@@ -90,28 +91,31 @@ def get_primitives(D_th):
     return prim_indices
 
 
+
 if __name__ == "__main__":
     
-    import pandas as pd # use pandas because it is nicer to visualize the arrays
+    torch.set_printoptions(sci_mode=False)
+    torch.set_printoptions(precision=2)
     
     # Create an array of size PxK where each line represents the latent code for one part
     m_lat = compute_latent_matrix(data_folder='sample_chair')
-    print(pd.DataFrame(m_lat))
+    m_lat = torch.tensor(m_lat)
+    print(m_lat)
 
     # Generate the matrix of the part2part distance (in the sence of difference)
-    from scipy.spatial import distance
-    D = distance.cdist(m_lat, m_lat, 'euclidean')
+    D = torch.cdist(m_lat, m_lat, p=2.0)
     assert D.shape == (m_lat.shape[0], m_lat.shape[0])
 
-    print(pd.DataFrame(D))
+    print(D)
 
     # Compute the matrix of correspondances
     th = 1 # This is defined arbitrary given the values of D
     D_th = D<1
-    print(pd.DataFrame(D_th))
+    print(D_th)
     print_parts_correspondances(D_th)
 
     # Get the primitives out of the matrix
+    print(f'Matrix Dth rank : {np.linalg.matrix_rank(D_th.numpy())}')
     prim_indices = get_primitives(D_th)
     print(f'Primitives indices: {prim_indices}')
     str_prim = [f'P{i+1}' for i in prim_indices]

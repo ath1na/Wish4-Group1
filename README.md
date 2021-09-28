@@ -3,7 +3,7 @@
 ## Requirements 
 
 - trimesh
-- pandas
+- pytorch
 
 
 ## Find primitives
