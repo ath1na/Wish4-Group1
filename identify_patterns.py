@@ -5,7 +5,7 @@ Implementation of what is presented in slide 62. Given a list of submeshes, we c
 - Try to input latent codes obtained from a NN
  """
 
-from stl import mesh
+"""from stl import mesh"""
 import os
 import trimesh
 import numpy as np
