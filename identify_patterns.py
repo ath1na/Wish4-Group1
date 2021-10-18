@@ -20,6 +20,7 @@ def load_parts(dir='sample_chair'):
     """Load each mesh part from the test chair directory"""
     meshes = []
     for i in range(1, 11):
+        print(os.path.join('..', dir, f'p{i}.stl'))
         mesh = load_mesh(os.path.join(dir, f'p{i}.stl'))
         meshes.append(mesh)
     return meshes
