@@ -115,7 +115,7 @@ if __name__ == "__main__":
     print_parts_correspondances(D_th)
 
     # Get the primitives out of the matrix
-    print(f'Matrix Dth rank : {np.linalg.matrix_rank(D_th.numpy())}')
+    print(f'Matrix Dth rank : {np.linalg.matrix_rank(D_th.numpy())}') # todo in torch
     prim_indices = get_primitives(D_th)
     print(f'Primitives indices: {prim_indices}')
     str_prim = [f'P{i+1}' for i in prim_indices]
