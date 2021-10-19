@@ -7,7 +7,7 @@ Implementation of what is presented in slide 62. Given a list of submeshes, we c
 
 
 """from stl import mesh"""
-import torch
+import torch 
 import os
 import trimesh
 import numpy as np
